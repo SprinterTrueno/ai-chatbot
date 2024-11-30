@@ -1,0 +1,25 @@
+// 参考资料
+// TS官网：https://www.typescriptlang.org/zh/tsconfig
+// TS中文网：https://www.tslang.cn/docs/handbook/compiler-options.html
+// 介绍全新的 JSX 转换：https://zh-hans.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
+
+{
+  "compilerOptions": {
+    // 允许从没有设置默认导出的模块中默认导入，仅影响类型检查，并不会影响编译后的代码输出。
+    // "allowSyntheticDefaultImports": true,
+    // 指定用于解析非相对模块名称的基本目录。
+    "baseUrl": ".",
+    // 控制 JSX 在 JavaScript 文件中的输出方式，这只影响 .tsx 文件的 JS 文件输出。
+    // react17 以下只能写 react，react17 以上可以写 react 或 react-jsx。
+    // react：将 JSX 改为等价的对 React.createElement 的调用并生成 js 文件。
+    // react-jsx：将 JSX 改为 __jsx 调用并生成 js 文件。详情看上方的参考资料：介绍全新的 JSX 转换。
+    // 由于不用 tsc，所以写哪个都可以。
+    "jsx": "react-jsx",
+    // 指定一组条目，将模块导入重新映射到相对于 baseUrl 路径的配置。
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  // 指定要包含在程序中的文件名或模式的数组。这些文件名是相对于包含该文件的目录解析的。
+  "include": ["src"]
+}
