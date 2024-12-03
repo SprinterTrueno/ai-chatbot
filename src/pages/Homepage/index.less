@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+
+  align-content: center;
+
+  width: 100%;
+  height: 60px;
+
+  text-align: right;
+
+  background: #fff;
+  box-shadow: 0 1px 0 rgb(0 0 0 / 10%);
+
+  button {
+    margin-right: 8px;
+  }
+}
+
+.content {
+  overflow: auto;
+  height: calc(100% - 116px);
+  padding: 8px;
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+
+  display: flex;
+
+  width: calc(100% - 16px);
+  padding: 8px;
+
+  background-color: #fff;
+}
+
+.submit {
+  margin-left: 8px;
+}
