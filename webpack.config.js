@@ -6,6 +6,7 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const pkg = require("./package.json");
 
 const { NODE_ENV } = process.env;
 
@@ -20,6 +21,7 @@ module.exports = {
     clean: true,
     filename: "[name].[contenthash:8].js",
     path: path.resolve(__dirname, "dist"),
+    publicPath: `/${pkg.name}/`,
   },
   module: {
     rules: [
@@ -99,6 +101,9 @@ module.exports = {
       {
         test: /\.(jpe?g|png|gif|svg|bpm)$/i,
         type: "asset",
+        generator: {
+          publicPath: `/${pkg.name}/`,
+        },
       },
     ],
   },
