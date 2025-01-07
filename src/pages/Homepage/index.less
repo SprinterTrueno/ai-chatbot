@@ -26,9 +26,57 @@
 .content {
   overflow: auto;
   height: calc(100% - 116px);
-  padding: 8px;
+  padding: 8px 16px;
 
-  .user {
+  .conversation-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+
+    margin: 16px auto;
+
+    font-size: 16px;
+    color: #3f3f3f;
+
+    /* position: relative;
+    width: 100%;
+    word-break: break-all; */
+
+    div:not(:last-child) {
+      margin-bottom: 4px;
+    }
+
+    .item-container {
+      display: flex;
+      width: 100%;
+
+      /* flex-direction: row;
+      justify-content: flex-end; */
+    }
+
+    .item-content {
+      max-width: 100%;
+      padding: 12px 16px;
+
+      line-height: 24px;
+      white-space: pre-wrap;
+
+      background-color: #f6f7fb;
+      border-radius: 12px;
+    }
+
+    &.user {
+      .item-container {
+        justify-content: flex-end;
+      }
+
+      .item-content {
+        background-color: #e0dfff; /* 仅修改字体大小 */
+      }
+    }
+  }
+
+  /* .user {
     display: flex;
     flex-direction: row-reverse;
 
@@ -49,7 +97,7 @@
       background-color: rgb(244 246 248 / 100%);
       border-radius: 12px;
     }
-  }
+  } */
 }
 
 .footer {
