@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { Input, Button, Upload, message } from "antd";
 import { LoadingOutlined, PlusOutlined, SendOutlined } from "@ant-design/icons";
 import { nanoid } from "nanoid";
-import "./index.less";
+import styles from "./index.module.less";
 
 type TextContent = string;
 type ImageAndTextContent = {
@@ -74,13 +74,13 @@ const Homepage: FC = () => {
   };
 
   return (
-    <div className="container">
-      <div className="header">
+    <div className={styles.container}>
+      <div className={styles.header}>
         <Button type="primary" onClick={handleCreateNewChat}>
           新建对话
         </Button>
       </div>
-      <div className="content">
+      <div className={styles.content}>
         {chatHistory.map((item, index) => {
           console.log(item);
 
@@ -89,10 +89,10 @@ const Homepage: FC = () => {
               index !== 0 && (
                 <div
                   key={nanoid()}
-                  className={`conversation-item ${item.role}`}
+                  className={`${styles.conversationItem} ${styles[item.role]}`}
                 >
-                  <div className="item-container">
-                    <div className="item-content">{item.content}</div>
+                  <div className={styles.itemContainer}>
+                    <div className={styles.itemContent}>{item.content}</div>
                   </div>
                 </div>
               )
@@ -104,13 +104,15 @@ const Homepage: FC = () => {
               index !== 0 && (
                 <div
                   key={nanoid()}
-                  className={`conversation-item ${item.role}`}
+                  className={`${styles.conversationItem} ${styles[item.role]}`}
                 >
                   {item.content.map((content) => {
                     if (content.type === "text") {
                       return (
-                        <div className="item-container">
-                          <div className="item-content">{content.text}</div>
+                        <div className={styles.itemContainer}>
+                          <div className={styles.itemContent}>
+                            {content.text}
+                          </div>
                         </div>
                       );
                     }
@@ -138,7 +140,7 @@ const Homepage: FC = () => {
           return [];
         })}
       </div>
-      <div className="footer">
+      <div className={styles.footer}>
         <Upload
           name="file123"
           method="POST"
@@ -187,7 +189,7 @@ const Homepage: FC = () => {
           onPressEnter={handleSendMessage}
         />
         <Button
-          className="submit"
+          className={styles.submit}
           icon={<SendOutlined />}
           size="large"
           onClick={handleSendMessage}
