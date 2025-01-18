@@ -13,7 +13,7 @@ const root = createRoot(document.getElementById("root"));
 root.render(
   <ConfigProvider locale={zhCN}>
     <ErrorBoundary FallbackComponent={Fallback}>
-      <BrowserRouter>
+      <BrowserRouter basename={DEVELOPMENT_ENV ? "" : `/${PROJECT_NAME}`}>
         <Routes />
       </BrowserRouter>
     </ErrorBoundary>

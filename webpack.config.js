@@ -1,5 +1,5 @@
 const path = require("path");
-const { IgnorePlugin } = require("webpack");
+const { DefinePlugin, IgnorePlugin } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
@@ -21,7 +21,7 @@ module.exports = {
     clean: true,
     filename: "[name].[contenthash:8].js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: `/${pkg.name}/`,
+    publicPath: DEVELOPMENT_ENV ? "" : `/${pkg.name}/`,
   },
   module: {
     rules: [
@@ -102,7 +102,9 @@ module.exports = {
         test: /\.(jpe?g|png|gif|svg|bpm)$/i,
         type: "asset",
         generator: {
-          publicPath: `/${pkg.name}/`,
+          filename: "[name][hash:8][ext]",
+          outputPath: DEVELOPMENT_ENV ? "" : "assets/images/",
+          publicPath: DEVELOPMENT_ENV ? "" : `/${pkg.name}/assets/images/`,
         },
       },
     ],
@@ -121,6 +123,10 @@ module.exports = {
     static: false,
   },
   plugins: [
+    new DefinePlugin({
+      DEVELOPMENT_ENV,
+      PROJECT_NAME: JSON.stringify(pkg.name),
+    }),
     new IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
       contextRegExp: /dayjs$/,
