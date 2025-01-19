@@ -61,11 +61,14 @@ const Homepage: FC = () => {
     setImageUrl(null);
     setChatHistory(newChatHistory);
 
-    const res = await fetch(`${BASE_URL}/ai-chatbot-api/qwen/conversation`, {
-      method: "POST",
-      body: JSON.stringify(newChatHistory),
-      headers: { "Content-Type": "application/json" },
-    });
+    const res = await fetch(
+      `${BASE_URL}/ai-chatbot-api/flagship/conversation`,
+      {
+        method: "POST",
+        body: JSON.stringify(newChatHistory),
+        headers: { "Content-Type": "application/json" },
+      },
+    );
 
     const data = await res.json();
 
@@ -146,7 +149,7 @@ const Homepage: FC = () => {
           method="POST"
           listType="picture-card"
           showUploadList={false}
-          action={`${BASE_URL}/ai-chatbot-api/qwen/upload-file`}
+          action={`${BASE_URL}/ai-chatbot-api/flagship/upload-file`}
           // TODO: 优化上传文件
           // beforeUpload={beforeUpload}
           onChange={(info) => {
