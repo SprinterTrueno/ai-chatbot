@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Input, Button, Upload, message } from "antd";
 import { LoadingOutlined, PlusOutlined, SendOutlined } from "@ant-design/icons";
 import { nanoid } from "nanoid";
+import API_URLS from "@/constants/apiUrls";
 import styles from "./index.module.less";
 
 type TextContent = string;
@@ -19,9 +20,6 @@ interface ChatHistory {
 const INITIAL_CHAT_HISTORY = [
   { role: "system", content: "You are a helpful assistant." },
 ];
-
-const BASE_URL = "http://localhost:3001";
-// const BASE_URL = "http://101.201.154.135";
 
 const Homepage: FC = () => {
   const [chatHistory, setChatHistory] =
@@ -61,14 +59,11 @@ const Homepage: FC = () => {
     setImageUrl(null);
     setChatHistory(newChatHistory);
 
-    const res = await fetch(
-      `${BASE_URL}/ai-chatbot-api/flagship/conversation`,
-      {
-        method: "POST",
-        body: JSON.stringify(newChatHistory),
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    const res = await fetch(API_URLS.flagShipConversation, {
+      method: "POST",
+      body: JSON.stringify(newChatHistory),
+      headers: { "Content-Type": "application/json" },
+    });
 
     const data = await res.json();
 
@@ -149,7 +144,7 @@ const Homepage: FC = () => {
           method="POST"
           listType="picture-card"
           showUploadList={false}
-          action={`${BASE_URL}/ai-chatbot-api/flagship/upload-file`}
+          action={API_URLS.uploadFile}
           // TODO: 优化上传文件
           // beforeUpload={beforeUpload}
           onChange={(info) => {
