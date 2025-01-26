@@ -17,9 +17,11 @@ const AgriculturalTechnologyYard: FC = () => {
   const [inputValue, setInputValue] = useState<string>();
   const [sessionId, setSessionId] = useState<string>();
 
-  const [data, setData] = useState([]);
-
+  /**
+   * 新建对话
+   */
   const handleCreateNewChat = () => {
+    // TODO：生成中禁止新建对话。
     setInputValue(null);
     setChatHistory([]);
   };
@@ -28,6 +30,18 @@ const AgriculturalTechnologyYard: FC = () => {
    * 发送消息
    */
   const handleSendMessage = async () => {
+    if (!inputValue) {
+      return;
+    }
+
+    const newChatHistory = [
+      ...chatHistory,
+      { role: "user", sessionId, text: inputValue },
+    ];
+
+    setInputValue(null);
+    setChatHistory(newChatHistory);
+
     const response = await fetch(API_URLS.atYardCallDashScope, {
       method: "POST",
       headers: {
@@ -39,64 +53,38 @@ const AgriculturalTechnologyYard: FC = () => {
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder("utf-8");
-    let done = false;
+    let streamDone = false;
 
-    while (!done) {
+    while (!streamDone) {
       // eslint-disable-next-line no-await-in-loop
-      const { value, done: streamDone } = await reader.read();
-      done = streamDone;
+      const { value, done } = await reader.read();
+      streamDone = done;
       if (value) {
         const chunk = decoder.decode(value, { stream: true });
-        // Process each line as a separate event
-        const lines = chunk
-          .split("\n")
-          .filter((line) => line.startsWith("data: "));
-        lines.forEach((line, index) => {
-          const parsedData = JSON.parse(line.slice(6)); // Remove "data: " prefix
-          setData((prevData) => [...prevData, parsedData.chunk]);
+        const lines = chunk.split("\n").filter((line) => {
+          return line.startsWith("data:");
+        });
+        lines.forEach((line) => {
+          const parsedData = JSON.parse(line.slice(5));
+          const { session_id, text } = parsedData.output;
+
+          if (!sessionId) {
+            setSessionId(session_id);
+          }
+
+          setChatHistory([
+            ...newChatHistory,
+            { role: "assistant", sessionId: session_id, text },
+          ]);
         });
       }
     }
-
-    /* if (!inputValue) {
-      return;
-    }
-
-    const newChatHistory = [
-      ...chatHistory,
-      { role: "user", text: inputValue, sessionId },
-    ];
-
-    setInputValue(null);
-    setChatHistory(newChatHistory);
-
-    const res = await fetch(API_URLS.atYardCallDashScope, {
-      method: "POST",
-      body: JSON.stringify({ sessionId, text: inputValue }),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await res.json();
-
-    if (!sessionId) {
-      setSessionId(data.sessionId);
-    }
-
-    console.log(data);
-
-    setChatHistory([...newChatHistory, { role: "assistant", ...data }]);
-    console.log([...newChatHistory, { role: "assistant", ...data }]); */
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Button
-          type="primary"
-          onClick={() => {
-            console.log(data);
-          }}
-        >
+        <Button type="primary" onClick={handleCreateNewChat}>
           新建对话
         </Button>
       </div>

@@ -30,6 +30,8 @@
   },
   "ignorePatterns": ["react-app-env.d.ts"],
   "rules": {
+    // 允许驼峰命名。
+    "camelcase": "off",
     // 允许以下文件类型在引入的时候不加扩展名。
     "import/extensions": [
       "error",
