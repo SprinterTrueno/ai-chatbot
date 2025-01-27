@@ -16,12 +16,12 @@ const AgriculturalTechnologyYard: FC = () => {
 
   const [inputValue, setInputValue] = useState<string>();
   const [sessionId, setSessionId] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   /**
    * 新建对话
    */
   const handleCreateNewChat = () => {
-    // TODO：生成中禁止新建对话。
     setInputValue(null);
     setChatHistory([]);
   };
@@ -41,6 +41,7 @@ const AgriculturalTechnologyYard: FC = () => {
 
     setInputValue(null);
     setChatHistory(newChatHistory);
+    setLoading(true);
 
     const response = await fetch(API_URLS.atYardCallDashScope, {
       method: "POST",
@@ -59,6 +60,11 @@ const AgriculturalTechnologyYard: FC = () => {
       // eslint-disable-next-line no-await-in-loop
       const { value, done } = await reader.read();
       streamDone = done;
+
+      if (done) {
+        setLoading(false);
+      }
+
       if (value) {
         const chunk = decoder.decode(value, { stream: true });
         const lines = chunk.split("\n").filter((line) => {
@@ -84,7 +90,7 @@ const AgriculturalTechnologyYard: FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Button type="primary" onClick={handleCreateNewChat}>
+        <Button type="primary" disabled={loading} onClick={handleCreateNewChat}>
           新建对话
         </Button>
       </div>
@@ -116,6 +122,7 @@ const AgriculturalTechnologyYard: FC = () => {
           className={styles.submit}
           icon={<SendOutlined />}
           size="large"
+          disabled={loading}
           onClick={handleSendMessage}
         />
       </div>
