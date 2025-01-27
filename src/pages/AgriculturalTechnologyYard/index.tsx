@@ -62,10 +62,10 @@ const AgriculturalTechnologyYard: FC = () => {
       if (value) {
         const chunk = decoder.decode(value, { stream: true });
         const lines = chunk.split("\n").filter((line) => {
-          return line.startsWith("data:");
+          return line.startsWith("data: ");
         });
         lines.forEach((line) => {
-          const parsedData = JSON.parse(line.slice(5));
+          const parsedData = JSON.parse(line.slice(6));
           const { session_id, text } = parsedData.output;
 
           if (!sessionId) {
