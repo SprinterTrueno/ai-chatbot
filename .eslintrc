@@ -45,6 +45,8 @@
     ],
     // 允许包含 JSX 的文件扩展名。
     "react/jsx-filename-extension": ["error", { "extensions": ["tsx"] }],
+    // 允许使用 dangerouslySetInnerHTML。
+    "react/no-danger": "off",
     // 使用 JSX 时允许缺少 React。
     "react/react-in-jsx-scope": "off",
     // 使用未使用的变量进行警告。

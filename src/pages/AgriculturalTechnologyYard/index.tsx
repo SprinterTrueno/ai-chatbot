@@ -1,6 +1,8 @@
 import { FC, useState } from "react";
 import { Input, Button } from "antd";
 import { SendOutlined } from "@ant-design/icons";
+import DOMPurify from "dompurify";
+import { marked } from "marked";
 import { nanoid } from "nanoid";
 import API_URLS from "@/constants/apiUrls";
 import styles from "./index.module.less";
@@ -102,7 +104,14 @@ const AgriculturalTechnologyYard: FC = () => {
               className={`${styles.conversationItem} ${styles[item.role]}`}
             >
               <div className={styles.itemContainer}>
-                <div className={styles.itemContent}>{item.text}</div>
+                <div
+                  className={styles.itemContent}
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(
+                      marked.parse(item.text, { async: false }),
+                    ),
+                  }}
+                />
               </div>
             </div>
           );
