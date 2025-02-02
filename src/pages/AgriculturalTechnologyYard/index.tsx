@@ -56,15 +56,13 @@ const AgriculturalTechnologyYard: FC = () => {
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder("utf-8");
-    let streamDone = false;
 
-    while (!streamDone) {
-      // eslint-disable-next-line no-await-in-loop
+    while (true) {
       const { value, done } = await reader.read();
-      streamDone = done;
 
       if (done) {
         setLoading(false);
+        break;
       }
 
       if (value) {

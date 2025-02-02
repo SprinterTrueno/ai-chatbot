@@ -38,6 +38,10 @@
       "ignorePackages",
       { "js": "never", "jsx": "never", "ts": "never", "tsx": "never" }
     ],
+    // 允许使用 await 在循环中。
+    "no-await-in-loop": "off",
+    // 允许在条件表达式中使用常量条件。
+    "no-constant-condition": "off",
     // 指定命名函数组件的定义风格为箭头函数。
     "react/function-component-definition": [
       "error",
