@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from "react";
-import { Input, Button } from "antd";
+import { Button, Input } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
@@ -10,21 +10,21 @@ import styles from "./index.module.less";
 interface ChatHistory {
   role: string;
   text: string;
-  sessionId?: string;
 }
 
 const AgriculturalTechnologyYard: FC = () => {
   const [chatHistory, setChatHistory] = useState<ChatHistory[]>([]);
-  const [inputValue, setInputValue] = useState<string>();
-  const [sessionId, setSessionId] = useState<string>();
+  const [inputValue, setInputValue] = useState<string>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // 会话Id
+  const sessionIdRef = useRef<string>(null);
   // 消息队列
-  const messageQueue = useRef([]);
+  const messageQueueRef = useRef<string[]>([]);
   // 状态标识
-  const isProcessing = useRef(false);
+  const isProcessingRef = useRef<boolean>(false);
   // 是否是第一个数据块
-  const firstChunk = useRef(true);
+  const firstChunkRef = useRef<boolean>(true);
 
   /**
    * 新建对话
@@ -38,39 +38,36 @@ const AgriculturalTechnologyYard: FC = () => {
    * 处理消息队列
    */
   const processNextMessage = async () => {
-    if (messageQueue.current.length === 0) {
-      isProcessing.current = false;
+    if (messageQueueRef.current.length === 0) {
+      isProcessingRef.current = false;
       return;
     }
 
-    isProcessing.current = true;
-    const line = messageQueue.current.shift();
+    isProcessingRef.current = true;
+    const line = messageQueueRef.current.shift();
 
     try {
       const parsedData = JSON.parse(line.slice(6).trim());
       const { session_id, text, finish_reason } = parsedData.output;
 
-      if (!sessionId) {
-        setSessionId(session_id);
+      if (!sessionIdRef.current) {
+        sessionIdRef.current = session_id;
       }
 
       if (finish_reason === "stop") {
-        firstChunk.current = true;
-        isProcessing.current = false;
+        firstChunkRef.current = true;
+        isProcessingRef.current = false;
         setLoading(false);
         return;
       }
 
       // 更新状态并等待状态更新完成
       await new Promise<void>((resolve) => {
-        if (firstChunk.current) {
-          firstChunk.current = false;
+        if (firstChunkRef.current) {
+          firstChunkRef.current = false;
           setChatHistory((prevState) => {
             resolve(); // 在状态更新前解决 Promise
-            return [
-              ...prevState,
-              { role: "assistant", sessionId: session_id, text },
-            ];
+            return [...prevState, { role: "assistant", text }];
           });
         } else {
           setChatHistory((prevState) => {
@@ -81,7 +78,6 @@ const AgriculturalTechnologyYard: FC = () => {
             if (updatedState.length > 0) {
               updatedState[updatedState.length - 1] = {
                 role: "assistant",
-                sessionId: session_id,
                 text: updatedState[updatedState.length - 1].text + text,
               };
             }
@@ -89,7 +85,7 @@ const AgriculturalTechnologyYard: FC = () => {
             return updatedState;
           });
         }
-        isProcessing.current = false;
+        isProcessingRef.current = false;
       });
 
       // 添加半秒延迟后再处理下一条消息
@@ -109,10 +105,7 @@ const AgriculturalTechnologyYard: FC = () => {
       return;
     }
 
-    const newChatHistory = [
-      ...chatHistory,
-      { role: "user", sessionId, text: inputValue },
-    ];
+    const newChatHistory = [...chatHistory, { role: "user", text: inputValue }];
 
     setInputValue(null);
     setChatHistory(newChatHistory);
@@ -125,7 +118,10 @@ const AgriculturalTechnologyYard: FC = () => {
           "Content-Type": "application/json",
           Accept: "text/event-stream",
         },
-        body: JSON.stringify({ sessionId, text: inputValue }),
+        body: JSON.stringify({
+          sessionId: sessionIdRef.current,
+          text: inputValue,
+        }),
       });
 
       const reader = response.body.getReader();
@@ -151,10 +147,10 @@ const AgriculturalTechnologyYard: FC = () => {
           buffer = buffer.substring(buffer.lastIndexOf("\n") + 1);
 
           // 将新接收到的行添加到队列中
-          messageQueue.current.push(...lines);
+          messageQueueRef.current.push(...lines);
 
           // 如果当前没有正在处理的消息，则开始处理队列中的第一条消息
-          if (!isProcessing.current) {
+          if (!isProcessingRef.current) {
             processNextMessage();
           }
         }
