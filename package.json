@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=development SERVER_ENV=development webpack serve",
     "start:prod": "cross-env NODE_ENV=development SERVER_ENV=production webpack serve",
     "build": "cross-env NODE_ENV=production SERVER_ENV=production webpack",
-    "tree": "treee -a -I \".idea|.git|node_modules|dist\"",
+    "tree": "treee -a -I \".idea|.git|node_modules|.husky|dist\"",
     "prepare": "husky"
   },
   "dependencies": {
