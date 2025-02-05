@@ -75,5 +75,6 @@ declare module "*.module.sass" {
   export default classes;
 }
 
-declare const DEVELOPMENT_ENV: boolean;
 declare const PROJECT_NAME: string;
+declare const NODE_ENV: string;
+declare const SERVER_ENV: string;

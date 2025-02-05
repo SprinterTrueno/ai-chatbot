@@ -13,7 +13,9 @@ const root = createRoot(document.getElementById("root"));
 root.render(
   <ConfigProvider locale={zhCN}>
     <ErrorBoundary FallbackComponent={Fallback}>
-      <BrowserRouter basename={DEVELOPMENT_ENV ? "" : `/${PROJECT_NAME}`}>
+      <BrowserRouter
+        basename={NODE_ENV === "development" ? "" : `/${PROJECT_NAME}`}
+      >
         <Routes />
       </BrowserRouter>
     </ErrorBoundary>

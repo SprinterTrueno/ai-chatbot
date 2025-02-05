@@ -8,7 +8,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const pkg = require("./package.json");
 
-const { NODE_ENV } = process.env;
+const { NODE_ENV, SERVER_ENV } = process.env;
 
 const DEVELOPMENT_ENV = NODE_ENV === "development";
 const PRODUCTION_ENV = NODE_ENV === "production";
@@ -124,8 +124,9 @@ module.exports = {
   },
   plugins: [
     new DefinePlugin({
-      DEVELOPMENT_ENV,
       PROJECT_NAME: JSON.stringify(pkg.name),
+      NODE_ENV: JSON.stringify(NODE_ENV),
+      SERVER_ENV: JSON.stringify(SERVER_ENV),
     }),
     new IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
