@@ -30,6 +30,7 @@ const AgriculturalTechnologyYard: FC = () => {
    * 新建对话
    */
   const handleCreateNewChat = () => {
+    sessionIdRef.current = null;
     setInputValue(null);
     setChatHistory([]);
   };
