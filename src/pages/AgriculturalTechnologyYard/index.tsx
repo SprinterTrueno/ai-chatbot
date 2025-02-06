@@ -2,10 +2,21 @@ import { FC, useEffect, useRef, useState } from "react";
 import { Button, Input } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import DOMPurify from "dompurify";
-import { marked } from "marked";
+import { marked, Tokens } from "marked";
 import { nanoid } from "nanoid";
 import API_URLS from "@/constants/apiUrls";
 import styles from "./index.module.less";
+
+// 自定义renderer
+const renderer = new marked.Renderer();
+
+renderer.link = ({ href, text }: Tokens.Link) => {
+  // 判断是否是指定类型的链接。
+  if (href.endsWith(".mp4")) {
+    return `<a href="${href}" rel="noopener noreferrer" target="_blank">${text}</a>`;
+  }
+  return `<a href="${href}">${text}</a>`;
+};
 
 interface ChatHistory {
   role: string;
@@ -184,7 +195,11 @@ const AgriculturalTechnologyYard: FC = () => {
                   className={styles.itemContent}
                   dangerouslySetInnerHTML={{
                     __html: DOMPurify.sanitize(
-                      marked.parse(item.text, { async: false }),
+                      marked.parse(item.text, {
+                        async: false,
+                        renderer,
+                      }),
+                      { ADD_ATTR: ["target"] },
                     ),
                   }}
                 />
