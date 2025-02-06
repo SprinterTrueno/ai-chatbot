@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Button, Input } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import DOMPurify from "dompurify";
@@ -25,6 +25,10 @@ const AgriculturalTechnologyYard: FC = () => {
   const isProcessingRef = useRef<boolean>(false);
   // 是否是第一个数据块
   const firstChunkRef = useRef<boolean>(true);
+
+  useEffect(() => {
+    document.title = "智农嘉云";
+  }, []);
 
   /**
    * 新建对话
