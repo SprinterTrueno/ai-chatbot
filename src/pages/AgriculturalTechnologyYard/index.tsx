@@ -36,10 +36,18 @@ const AgriculturalTechnologyYard: FC = () => {
   const isProcessingRef = useRef<boolean>(false);
   // 是否是第一个数据块
   const firstChunkRef = useRef<boolean>(true);
+  // 聊天内容区域
+  const chatContentRef = useRef(null);
 
   useEffect(() => {
     document.title = "智农嘉云";
   }, []);
+
+  useEffect(() => {
+    if (chatContentRef.current) {
+      chatContentRef.current.scrollTop = chatContentRef.current.scrollHeight;
+    }
+  }, [chatHistory]);
 
   /**
    * 新建对话
@@ -183,7 +191,7 @@ const AgriculturalTechnologyYard: FC = () => {
           新建对话
         </Button>
       </div>
-      <div className={styles.content}>
+      <div className={styles.content} ref={chatContentRef}>
         {chatHistory.map((item) => {
           return (
             <div
