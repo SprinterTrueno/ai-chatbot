@@ -40,7 +40,7 @@ const AgriculturalTechnologyYard: FC = () => {
   const chatContentRef = useRef(null);
 
   useEffect(() => {
-    document.title = "智农嘉云";
+    document.title = "嘉云智农";
   }, []);
 
   useEffect(() => {
@@ -53,6 +53,9 @@ const AgriculturalTechnologyYard: FC = () => {
    * 新建对话
    */
   const handleCreateNewChat = () => {
+    /* window.open(
+      "https://db.hnxsj.vip/50447cec991371efbd704531859c0202/e267fd4024a1417a9c602151c85f7f2a-24214d79bbd01fb17fa0d3dcc191607f-ld.mp4",
+    ); */
     sessionIdRef.current = null;
     setInputValue(null);
     setChatHistory([]);
